@@ -27,9 +27,11 @@ nav:
   - Documentation:
       - Generator Guide: GENERATOR_GUIDE.md
       - Manual Creation: PROFILE_CREATION_GUIDE.md
-  - Reference:
+      - Testing & Validation: TESTING.md
+  - Advanced:
       - API Reference: api-reference.md
       - Examples: examples.md
+      - Dynamic UI from OpenAPI: SUBSCRIPTION_UI_IMPLEMENTATION.md
 
 markdown_extensions:
   - admonition
