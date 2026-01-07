@@ -28,12 +28,13 @@ jobs:
       
       - name: Build documentation
         run: |
+          cd OGC-Service-Profile-Creation
           mkdocs build
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./OGC-Service-Profile-Creation/site
       
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
