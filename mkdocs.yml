@@ -4,6 +4,7 @@ site_author: NOAA/NWS/MDL
 site_url: https://shanemill1.github.io/OGC-Service-Profile-Creation/
 repo_url: https://github.com/ShaneMill1/OGC-Service-Profile-Creation
 repo_name: GitHub
+use_directory_urls: true
 
 theme:
   name: material
