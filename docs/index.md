@@ -6,6 +6,60 @@ Welcome to the OGC API - Environmental Data Retrieval (EDR) Part 3 Service Profi
 
 This repository provides tools and documentation for creating **OGC API - EDR Part 3 Service Profiles** - formal specifications that define how to implement OGC APIs for specific use cases.
 
+---
+
+<div class="grid cards" markdown>
+
+-   :rocket: __Quick Start__
+
+    ---
+
+    Get started in minutes with the automated profile generator.
+
+    **Time:** 5-10 minutes  
+    **Difficulty:** Easy
+
+    [:octicons-arrow-right-24: Generator Guide](GENERATOR_GUIDE.md)
+
+-   :books: __Documentation__
+
+    ---
+
+    Complete guides for creating profiles manually or with automation.
+
+    - [Quick Reference](QUICK_REFERENCE.md)
+    - [Manual Creation Guide](PROFILE_CREATION_GUIDE.md)
+
+    [:octicons-arrow-right-24: View All Docs](README.md)
+
+-   :material-code-braces: __API Reference__
+
+    ---
+
+    Technical reference for the profile generator API.
+
+    - Command-line options
+    - Query type configurations
+    - Template system
+
+    [:octicons-arrow-right-24: API Docs](api-reference.md)
+
+-   :material-file-document-multiple: __Examples__
+
+    ---
+
+    Real-world examples and use cases.
+
+    - Water Gauge Profile
+    - Aviation Weather
+    - Marine Observations
+
+    [:octicons-arrow-right-24: View Examples](examples.md)
+
+</div>
+
+---
+
 ## Features
 
 - **Automated Profile Generator** - Create complete profiles in minutes
@@ -16,12 +70,12 @@ This repository provides tools and documentation for creating **OGC API - EDR Pa
 
 ## Quick Start
 
-### Installation
+## Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/ogc-edr-profile-generator.git
-cd ogc-edr-profile-generator
+git clone https://github.com/ShaneMill1/OGC-Service-Profile-Creation.git
+cd OGC-Service-Profile-Creation
 
 # Install dependencies
 pip install -r requirements.txt
