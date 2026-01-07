@@ -22,7 +22,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Overview: README.md
+  - Overview: overview.md
   - Quick Reference: QUICK_REFERENCE.md
   - Documentation:
       - Generator Guide: GENERATOR_GUIDE.md
