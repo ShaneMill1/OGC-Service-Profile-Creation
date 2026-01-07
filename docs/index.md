@@ -4,7 +4,7 @@ Welcome to the OGC API - Environmental Data Retrieval (EDR) Part 3 Service Profi
 
 ## What is This?
 
-This repository provides tools and documentation for creating **OGC API - EDR Part 3 Service Profiles** - formal specifications that define how to implement EDR APIs for specific use cases.
+This repository provides tools and documentation for creating **OGC API - EDR Part 3 Service Profiles** - formal specifications that define how to implement OGC APIs for specific use cases.
 
 ## Features
 
