@@ -30,7 +30,7 @@ This repository provides tools and documentation for creating **OGC API - EDR Pa
     - [Quick Reference](QUICK_REFERENCE.md)
     - [Manual Creation Guide](PROFILE_CREATION_GUIDE.md)
 
-    [:octicons-arrow-right-24: View All Docs](README.md)
+    [:octicons-arrow-right-24: Overview](README/)
 
 -   :material-code-braces: __API Reference__
 
