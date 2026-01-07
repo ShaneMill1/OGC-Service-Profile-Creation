@@ -156,8 +156,8 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-org/ogc-edr-profile-generator/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-org/ogc-edr-profile-generator/discussions)
+- **Issues**: [GitHub Issues](https://github.com/ShaneMill1/OGC-Service-Profile-Creation/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ShaneMill1/OGC-Service-Profile-Creation/discussions)
 - **Email**: shane.mill@noaa.gov
 
 ## Acknowledgments

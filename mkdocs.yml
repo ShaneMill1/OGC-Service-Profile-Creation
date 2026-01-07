@@ -56,4 +56,4 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/your-org/ogc-edr-profile-generator
+      link: https://github.com/ShaneMill1/OGC-Service-Profile-Creation
