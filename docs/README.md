@@ -165,7 +165,7 @@ Real-time water gauge notifications with PubSub support.
 - Email subscriptions with filtering
 - Dynamic UI generation
 
-**Documentation:** See [Water Gauge Profile Documentation](../water-gauge-profile/docs/)
+**Documentation:** See the [Water Gauge Profile](https://edr-api-c.mdl.nws.noaa.gov/water_pygeoapi/) live implementation
 
 ## Tools
 
@@ -243,4 +243,4 @@ To contribute to profile creation tools or documentation:
 - **Generator usage:** See [GENERATOR_GUIDE.md](GENERATOR_GUIDE.md)
 - **Manual creation:** See [PROFILE_CREATION_GUIDE.md](PROFILE_CREATION_GUIDE.md)
 - **Quick reference:** See [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
-- **Example profile:** See [Water Gauge Profile](../water-gauge-profile/docs/)
+- **Example profile:** See [Water Gauge Profile](https://edr-api-c.mdl.nws.noaa.gov/water_pygeoapi/)
