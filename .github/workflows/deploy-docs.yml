@@ -24,18 +24,16 @@ jobs:
       
       - name: Install dependencies
         run: |
-          cd OGC-Service-Profile-Creation
           pip install -r requirements.txt
       
       - name: Build documentation
         run: |
-          cd OGC-Service-Profile-Creation
           mkdocs build
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./OGC-Service-Profile-Creation/site
+          path: ./site
       
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
