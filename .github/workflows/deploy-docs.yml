@@ -24,6 +24,7 @@ jobs:
       
       - name: Install dependencies
         run: |
+          cd OGC-Service-Profile-Creation
           pip install -r requirements.txt
       
       - name: Build documentation
