@@ -19,7 +19,7 @@ This repository provides an automated tool for generating OGC API - EDR Part 3 S
 ### Installation
 
 ```bash
-git clone https://github.com/ShaneMill1/ogc-edr-profile-generator.git
+git clone https://github.com/ShaneMill1/OGC-Service-Profile-Creation.git
 cd ogc-edr-profile-generator
 pip install -r requirements.txt
 ```
@@ -91,7 +91,7 @@ Apache License 2.0 - See [LICENSE](LICENSE) for details.
 
 - **Author**: Shane Mill (NOAA/NWS/MDL)
 - **Email**: shane.mill@noaa.gov
-- **Issues**: https://github.com/ShaneMill1/ogc-edr-profile-generator/issues
+- **Issues**: https://github.com/ShaneMill1/OGC-Service-Profile-Creation/issues
 
 ## Acknowledgments
 
