@@ -19,6 +19,9 @@ The Water Gauge Profile provides an email subscription form at `/subscribe` that
 
 The form validates input, provides helpful descriptions for each flood stage, and submits subscriptions to the API.
 
+![Email Subscription Form](images/screenshot_email.png)
+*Example subscription form generated from OpenAPI specification*
+
 ## Why It's Dynamic
 
 Unlike traditional web forms with hardcoded HTML fields, this subscription form is **generated automatically** from the Service Profile's OpenAPI specification. This means:
