@@ -95,7 +95,7 @@ See the [Generator Guide](GENERATOR_GUIDE.md) for detailed usage.
 
 ## Documentation
 
-- **[Getting Started](README.md)** - Overview and introduction
+- **[Getting Started](../README/)** - Overview and introduction
 - **[Quick Reference](QUICK_REFERENCE.md)** - Quick reference for common tasks
 - **[Generator Guide](GENERATOR_GUIDE.md)** - Automated profile generation
 - **[Manual Creation Guide](PROFILE_CREATION_GUIDE.md)** - Step-by-step manual creation
