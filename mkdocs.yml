@@ -21,7 +21,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting Started: README.md
+  - Overview: README.md
   - Quick Reference: QUICK_REFERENCE.md
   - Documentation:
       - Generator Guide: GENERATOR_GUIDE.md
