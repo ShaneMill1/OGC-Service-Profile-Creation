@@ -1,7 +1,8 @@
 site_name: OGC API - EDR Profile Generator
 site_description: Tools and documentation for creating OGC API - EDR Part 3 Service Profiles
 site_author: NOAA/NWS/MDL
-repo_url: https://github.com/your-org/ogc-edr-profile-generator
+site_url: https://shanemill1.github.io/OGC-Service-Profile-Creation/
+repo_url: https://github.com/ShaneMill1/OGC-Service-Profile-Creation
 repo_name: GitHub
 
 theme:
