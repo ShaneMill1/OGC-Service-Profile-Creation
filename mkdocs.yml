@@ -1,0 +1,54 @@
+site_name: OGC API - EDR Profile Generator
+site_description: Tools and documentation for creating OGC API - EDR Part 3 Service Profiles
+site_author: NOAA/NWS/MDL
+repo_url: https://github.com/your-org/ogc-edr-profile-generator
+repo_name: GitHub
+
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: light blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: README.md
+      - Quick Start: QUICK_REFERENCE.md
+  - Documentation:
+      - Generator Guide: GENERATOR_GUIDE.md
+      - Manual Creation: PROFILE_CREATION_GUIDE.md
+  - Reference:
+      - API Reference: api-reference.md
+      - Examples: examples.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - git-revision-date-localized
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org/ogc-edr-profile-generator
