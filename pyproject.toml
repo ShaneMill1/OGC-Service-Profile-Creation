@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ogc-edr-profile"
+version = "1.0.4"
+description = "Authoritative tooling for creating OGC API - EDR Part 3 Service Profiles"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Shane Mill", email = "shane.mill@noaa.gov" }]
+keywords = ["ogc", "edr", "environmental-data-retrieval", "profile", "openapi"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "edr-pydantic>=0.3",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ShaneMill1/OGC-Service-Profile-Creation"
+Issues = "https://github.com/ShaneMill1/OGC-Service-Profile-Creation/issues"
+
+[project.scripts]
+ogc-edr-profile = "ogc_edr_profile.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

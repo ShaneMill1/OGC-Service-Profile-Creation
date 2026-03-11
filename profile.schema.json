@@ -1,0 +1,1354 @@
+{
+  "$defs": {
+    "AbstractTest": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "requirement_id",
+        "steps"
+      ],
+      "title": "AbstractTest",
+      "type": "object"
+    },
+    "Category": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "Category",
+      "type": "object"
+    },
+    "Collection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "keywords": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Keywords"
+        },
+        "links": {
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "title": "Links",
+          "type": "array"
+        },
+        "extent": {
+          "$ref": "#/$defs/Extent"
+        },
+        "data_queries": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DataQueries"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "crs": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Crs"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "parameter_names": {
+          "$ref": "#/$defs/RootModel_Dict_str__Parameter__"
+        },
+        "distanceunits": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distanceunits"
+        }
+      },
+      "required": [
+        "id",
+        "links",
+        "extent",
+        "parameter_names"
+      ],
+      "title": "Collection",
+      "type": "object"
+    },
+    "CorridorVariables": {
+      "additionalProperties": true,
+      "properties": {
+        "query_type": {
+          "title": "Query Type",
+          "type": "string"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "default_output_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Output Format"
+        },
+        "height_units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Height Units",
+          "type": "array"
+        },
+        "within_units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Within Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "query_type",
+        "height_units",
+        "within_units"
+      ],
+      "title": "CorridorVariables",
+      "type": "object"
+    },
+    "CubeVariables": {
+      "additionalProperties": true,
+      "properties": {
+        "query_type": {
+          "title": "Query Type",
+          "type": "string"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "default_output_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Output Format"
+        },
+        "height_units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Height Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "query_type",
+        "height_units"
+      ],
+      "title": "CubeVariables",
+      "type": "object"
+    },
+    "Custom": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "interval": {
+          "items": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Interval",
+          "type": "array"
+        },
+        "values": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Values"
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "interval",
+        "reference"
+      ],
+      "title": "Custom",
+      "type": "object"
+    },
+    "DataQueries": {
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "radius": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cube": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "trajectory": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "corridor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "locations": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "instances": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EDRQuery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "DataQueries",
+      "type": "object"
+    },
+    "EDRQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "link": {
+          "$ref": "#/$defs/EDRQueryLink"
+        }
+      },
+      "required": [
+        "link"
+      ],
+      "title": "EDRQuery",
+      "type": "object"
+    },
+    "EDRQueryLink": {
+      "additionalProperties": true,
+      "properties": {
+        "href": {
+          "title": "Href",
+          "type": "string"
+        },
+        "hreflang": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hreflang"
+        },
+        "rel": {
+          "title": "Rel",
+          "type": "string"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Type"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "length": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Length"
+        },
+        "templated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Templated"
+        },
+        "variables": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Variables"
+            },
+            {
+              "$ref": "#/$defs/CubeVariables"
+            },
+            {
+              "$ref": "#/$defs/CorridorVariables"
+            },
+            {
+              "$ref": "#/$defs/ItemVariables"
+            },
+            {
+              "$ref": "#/$defs/RadiusVariables"
+            }
+          ],
+          "title": "Variables"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "variables"
+      ],
+      "title": "EDRQueryLink",
+      "type": "object"
+    },
+    "Extent": {
+      "additionalProperties": false,
+      "properties": {
+        "spatial": {
+          "$ref": "#/$defs/Spatial"
+        },
+        "temporal": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temporal"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "vertical": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Vertical"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "custom": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Custom"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Custom"
+        }
+      },
+      "required": [
+        "spatial"
+      ],
+      "title": "Extent",
+      "type": "object"
+    },
+    "FilterType": {
+      "enum": [
+        "string",
+        "number",
+        "array",
+        "boolean"
+      ],
+      "title": "FilterType",
+      "type": "string"
+    },
+    "ItemVariables": {
+      "additionalProperties": true,
+      "properties": {
+        "query_type": {
+          "title": "Query Type",
+          "type": "string"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "default_output_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Output Format"
+        }
+      },
+      "required": [
+        "query_type"
+      ],
+      "title": "ItemVariables",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "properties": {
+        "href": {
+          "title": "Href",
+          "type": "string"
+        },
+        "hreflang": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hreflang"
+        },
+        "rel": {
+          "title": "Rel",
+          "type": "string"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Type"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "length": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Length"
+        },
+        "templated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Templated"
+        },
+        "variables": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Variables"
+            },
+            {
+              "$ref": "#/$defs/CubeVariables"
+            },
+            {
+              "$ref": "#/$defs/CorridorVariables"
+            },
+            {
+              "$ref": "#/$defs/ItemVariables"
+            },
+            {
+              "$ref": "#/$defs/RadiusVariables"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Variables"
+        }
+      },
+      "required": [
+        "href",
+        "rel"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "MeasurementType": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "duration": {
+          "title": "Duration",
+          "type": "string"
+        }
+      },
+      "required": [
+        "method",
+        "duration"
+      ],
+      "title": "MeasurementType",
+      "type": "object"
+    },
+    "ObservedProperty": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "categories": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Category"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Categories"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "title": "ObservedProperty",
+      "type": "object"
+    },
+    "Parameter": {
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "const": "Parameter",
+          "default": "Parameter",
+          "title": "Type"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "data-type": {
+          "anyOf": [
+            {
+              "enum": [
+                "integer",
+                "float",
+                "string"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data-Type"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "observedProperty": {
+          "$ref": "#/$defs/ObservedProperty"
+        },
+        "extent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Extent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "measurementType": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MeasurementType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "observedProperty"
+      ],
+      "title": "Parameter",
+      "type": "object"
+    },
+    "PubSubConfig": {
+      "description": "Optional OGC API - EDR Part 2 (PubSub) configuration.",
+      "properties": {
+        "broker_host": {
+          "default": "localhost",
+          "title": "Broker Host",
+          "type": "string"
+        },
+        "broker_port": {
+          "default": 5672,
+          "maximum": 65535,
+          "minimum": 1,
+          "title": "Broker Port",
+          "type": "integer"
+        },
+        "protocol": {
+          "default": "amqp",
+          "enum": [
+            "amqp",
+            "mqtt",
+            "kafka"
+          ],
+          "title": "Protocol",
+          "type": "string"
+        },
+        "filters": {
+          "items": {
+            "$ref": "#/$defs/SubscriptionFilter"
+          },
+          "title": "Filters",
+          "type": "array"
+        }
+      },
+      "title": "PubSubConfig",
+      "type": "object"
+    },
+    "RadiusVariables": {
+      "additionalProperties": true,
+      "properties": {
+        "query_type": {
+          "title": "Query Type",
+          "type": "string"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "default_output_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Output Format"
+        },
+        "within_units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Within Units",
+          "type": "array"
+        }
+      },
+      "required": [
+        "query_type",
+        "within_units"
+      ],
+      "title": "RadiusVariables",
+      "type": "object"
+    },
+    "Requirement": {
+      "properties": {
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9\\-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "parts": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Parts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "statement",
+        "parts"
+      ],
+      "title": "Requirement",
+      "type": "object"
+    },
+    "RootModel_Dict_str__Parameter__": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Parameter"
+      },
+      "title": "RootModel[Dict[str, Parameter]]",
+      "type": "object"
+    },
+    "Spatial": {
+      "additionalProperties": false,
+      "properties": {
+        "bbox": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Bbox",
+          "type": "array"
+        },
+        "crs": {
+          "title": "Crs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bbox",
+        "crs"
+      ],
+      "title": "Spatial",
+      "type": "object"
+    },
+    "SubscriptionFilter": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/FilterType"
+            }
+          ],
+          "default": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "title": "SubscriptionFilter",
+      "type": "object"
+    },
+    "Symbol": {
+      "additionalProperties": true,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "type"
+      ],
+      "title": "Symbol",
+      "type": "object"
+    },
+    "Temporal": {
+      "additionalProperties": false,
+      "properties": {
+        "interval": {
+          "items": {
+            "items": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "title": "Interval",
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "trs": {
+          "title": "Trs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "interval",
+        "values",
+        "trs"
+      ],
+      "title": "Temporal",
+      "type": "object"
+    },
+    "Unit": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/Symbol"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Symbol"
+        }
+      },
+      "title": "Unit",
+      "type": "object"
+    },
+    "Variables": {
+      "additionalProperties": true,
+      "properties": {
+        "query_type": {
+          "title": "Query Type",
+          "type": "string"
+        },
+        "output_formats": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Formats"
+        },
+        "default_output_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Output Format"
+        }
+      },
+      "required": [
+        "query_type"
+      ],
+      "title": "Variables",
+      "type": "object"
+    },
+    "Vertical": {
+      "additionalProperties": false,
+      "properties": {
+        "interval": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Interval",
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "vrs": {
+          "title": "Vrs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "interval",
+        "values",
+        "vrs"
+      ],
+      "title": "Vertical",
+      "type": "object"
+    }
+  },
+  "description": "OGC API - EDR Part 3 Service Profile.\n\nInstantiating this model validates the entire profile. Export to dict/JSON\nfor downstream serialization (OpenAPI, AsyncAPI, AsciiDoc, YAML config).",
+  "properties": {
+    "name": {
+      "pattern": "^[a-z0-9_]+$",
+      "title": "Name",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "default": "1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "collections": {
+      "items": {
+        "$ref": "#/$defs/Collection"
+      },
+      "minItems": 1,
+      "title": "Collections",
+      "type": "array"
+    },
+    "requirements": {
+      "items": {
+        "$ref": "#/$defs/Requirement"
+      },
+      "title": "Requirements",
+      "type": "array"
+    },
+    "abstract_tests": {
+      "items": {
+        "$ref": "#/$defs/AbstractTest"
+      },
+      "title": "Abstract Tests",
+      "type": "array"
+    },
+    "pubsub": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PubSubConfig"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "name",
+    "title",
+    "collections"
+  ],
+  "title": "ServiceProfile",
+  "type": "object"
+}
