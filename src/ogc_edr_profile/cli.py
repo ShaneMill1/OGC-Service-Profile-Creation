@@ -46,6 +46,7 @@ from pydantic import ValidationError
 
 from ogc_edr_profile.generate import generate, build_openapi
 from ogc_edr_profile.models import ServiceProfile
+from ogc_edr_profile.compile import compile_pdf
 
 
 def _parse_datetimes(obj, _in_examples: bool = False):
@@ -82,6 +83,7 @@ def main() -> None:
     gen = sub.add_parser("generate", help="Validate a profile config and generate all artifacts")
     gen.add_argument("--config", required=True, type=Path, help="Profile YAML or JSON config")
     gen.add_argument("--output", required=True, type=Path, help="Output directory")
+    gen.add_argument("--pdf", action="store_true", default=False, help="Compile PDF via Metanorma Docker after generating artifacts")
 
     # validate
     val = sub.add_parser("validate", help="Validate a profile config without generating output")
@@ -140,6 +142,9 @@ def main() -> None:
         return
 
     generate(profile, args.output)
+
+    if args.pdf:
+        compile_pdf(args.output.resolve())
 
 
 def _run_validate_server(args) -> None:

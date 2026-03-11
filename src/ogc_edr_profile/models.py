@@ -97,6 +97,17 @@ class SubscriptionFilter(BaseModel):
 Collection = EDRCollection
 
 
+class DocumentMetadata(BaseModel):
+    """Metanorma/OGC document header metadata for PDF compilation."""
+    doc_number: str
+    doc_subtype: Literal["implementation", "best-practice", "engineering-report"] = "implementation"
+    editors: list[str] = Field(default_factory=list)
+    submitting_orgs: list[str] = Field(default_factory=list)
+    keywords: list[str] = Field(default_factory=list)
+    copyright_year: int = Field(default=2026)
+    external_id: str | None = None
+
+
 class PubSubConfig(BaseModel):
     """Optional OGC API - EDR Part 2 (PubSub) configuration."""
     broker_host: str = "localhost"
@@ -127,6 +138,7 @@ class ServiceProfile(BaseModel):
     abstract_tests: list[AbstractTest] = Field(default_factory=list)
     pubsub: PubSubConfig | None = None
     processes: list[dict] = Field(default_factory=list)
+    document_metadata: DocumentMetadata | None = None
 
     # OGC identifiers derived from name — not user-supplied
     @property

@@ -578,6 +578,136 @@ def _individual_test_adoc(profile: ServiceProfile, test_id: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Metanorma root document
+# ---------------------------------------------------------------------------
+
+def _build_document_adoc(profile: ServiceProfile) -> str:
+    m = profile.document_metadata
+    year = m.copyright_year if m else 2026
+    # draft-standard is the correct OGC doctype for in-progress profiles
+    doctype = "draft-standard"
+    # profile is not a valid OGC subtype; implementation is the closest for a service profile
+    docsubtype = "implementation" if not m or m.doc_subtype == "profile" else m.doc_subtype
+    lines = [
+        f"= {profile.title}",
+        f":doctype: {doctype}",
+        f":docsubtype: {docsubtype}",
+        f":edition: {profile.version}",
+        ":language: en",
+        ":committee: technical",
+        f":docnumber: {m.doc_number if m else profile.name}",
+        f":copyright-year: {year}",
+        f":published-date: {year}-01-01",
+        f":issued-date: {year}-01-01",
+        f":received-date: {year}-01-01",
+    ]
+    if m and m.external_id:
+        lines.append(f":external-id: {m.external_id}")
+    if m and m.editors:
+        for i, editor in enumerate(m.editors):
+            suffix = f"_{i + 1}" if i > 0 else ""
+            lines.append(f":fullname{suffix}: {editor}")
+            lines.append(f":role{suffix}: editor")
+    if m and m.keywords:
+        lines.append(f":keywords: {', '.join(m.keywords)}")
+    if m and m.submitting_orgs:
+        lines.append(f":submitting-organizations: {'; '.join(m.submitting_orgs)}")
+    lines += [
+        ":mn-document-class: ogc",
+        ":mn-output-extensions: xml,html,pdf",
+        ":local-cache-only:",
+        "",
+        "include::sections/00-abstract.adoc[]",
+        "",
+        "include::sections/01-preface.adoc[]",
+        "",
+        "include::sections/02-scope.adoc[]",
+        "",
+        "include::sections/03-conformance.adoc[]",
+        "",
+        "include::sections/04-references.adoc[]",
+        "",
+        "include::sections/05-terms.adoc[]",
+        "",
+        "include::sections/06-requirements.adoc[]",
+        "",
+        "include::sections/07-abstract-tests.adoc[]",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def _build_sections(profile: ServiceProfile) -> dict[str, str]:
+    """Return the minimal boilerplate sections required by Metanorma OGC."""
+    m = profile.document_metadata
+    conf_uris = [f"http://www.opengis.net/spec/ogcapi-edr-3/1.0/conf/{profile.name}"]
+    submitters = m.submitting_orgs if m and m.submitting_orgs else ["Unknown"]
+    req_includes = "\n".join(
+        f"include::../requirements/core/REQ_{r.id}.adoc[]" for r in profile.requirements
+    )
+    ats_includes = "\n".join(
+        f"include::../abstract_tests/core/ATS_{t.id}.adoc[]" for t in profile.abstract_tests
+    )
+    return {
+        "sections/00-abstract.adoc": (
+            "[abstract]\n== Abstract\n\n"
+            f"This document defines the {profile.title}, "
+            "an OGC API - Environmental Data Retrieval (EDR) Part 3 Service Profile. "
+            "It specifies normative requirements and conformance tests for server implementations "
+            f"conforming to this profile.\n"
+            "\n"
+            "[.preface]\n== Submitters\n\n"
+            "All questions regarding this document should be directed to the editor or the submitters:\n\n"
+            "[%unnumbered]\n"
+            ".Submitters\n"
+            "|===\n"
+            "h|Name h|Affiliation\n\n"
+            + "\n".join(
+                f"| {editor} _(editor)_ |{submitters[0] if submitters else ''}"
+                for editor in (m.editors if m and m.editors else ["Unknown"])
+            )
+            + "\n|===\n"
+        ),
+        "sections/01-preface.adoc": (
+            "[.preface]\n== Preface\n\n"
+            f"This document was prepared by {', '.join(m.submitting_orgs) if m and m.submitting_orgs else 'the submitting organizations'}.\n"
+        ),
+        "sections/02-scope.adoc": (
+            "== Scope\n\n"
+            f"This standard defines the {profile.title}. "
+            "It specifies requirements and conformance tests for implementations of this profile.\n"
+        ),
+        "sections/03-conformance.adoc": (
+            "== Conformance\n\n"
+            "Conformance with this standard shall be checked using the Abstract Test Suite in Annex A.\n\n"
+            "The following conformance classes are defined:\n\n"
+            + "\n".join(f"* {u}" for u in conf_uris) + "\n"
+        ),
+        "sections/04-references.adoc": (
+            "[bibliography]\n== References\n\n"
+            "* [[[OGC-EDR-1,OGC 19-086r6]]], OGC API - Environmental Data Retrieval Standard\n"
+            "* [[[OGC-EDR-3,nofetch(OGC ogcapi-edr-3)]]], OGC API - EDR Part 3: Service Profiles (draft)\n"
+        ),
+        "sections/05-terms.adoc": (
+            "== Terms, Definitions and Abbreviated Terms\n\n"
+            "This document uses the terms defined in https://portal.ogc.org/public_ogc/directives/directives.php[OGC Policy Directive 49], "
+            "which is based on the ISO/IEC Directives, Part 2, Rules for the structure and drafting of International Standards. "
+            "In particular, the word \"shall\" (not \"must\") is the verb form used to indicate a requirement to be strictly followed to conform to this standard.\n\n"
+            "This document also uses terms defined in OGC API - EDR Part 1: Core.\n"
+        ),
+        "sections/06-requirements.adoc": (
+            "== Requirements\n\n"
+            "include::../requirements/requirements_class_core.adoc[]\n\n"
+            + req_includes + "\n"
+        ),
+        "sections/07-abstract-tests.adoc": (
+            "[appendix,obligation=normative]\n== Abstract Test Suite\n\n"
+            "include::../abstract_tests/ATS_class_core.adoc[]\n\n"
+            + ats_includes + "\n"
+        ),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -621,5 +751,10 @@ def generate(profile: ServiceProfile, output_dir: Path) -> None:
         "profile_config.json",
         profile.model_dump_json(indent=2),
     )
+
+    # Metanorma document (always written — needed for --pdf)
+    safe_write("document.adoc", _build_document_adoc(profile))
+    for path, content in _build_sections(profile).items():
+        safe_write(path, content)
 
     print(f"Profile '{profile.name}' written to {output_dir}")

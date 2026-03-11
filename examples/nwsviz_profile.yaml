@@ -3,6 +3,24 @@ title: NWSViz EDR Service Profile
 version: "1.0"
 server_url: https://edr-api-desi-c.mdl.nws.noaa.gov
 
+document_metadata:
+  doc_number: "24-nwsviz"
+  doc_subtype: implementation
+  copyright_year: 2026
+  editors:
+    - Shane Mill
+  submitting_orgs:
+    - NOAA/NWS/MDL
+  keywords:
+    - ogcdoc
+    - OGC API
+    - EDR
+    - Environmental Data Retrieval
+    - NWSViz
+    - service profile
+    - weather
+  external_id: http://www.opengis.net/doc/dp/ogcapi-edr-nwsviz/1.0
+
 collection_examples:
   aigfs0p25_v1p0_global_latlon:
     instanceId: "2025-01-20T00:00Z"
