@@ -47,6 +47,7 @@ from pydantic import ValidationError
 from ogc_edr_profile.generate import generate, build_openapi
 from ogc_edr_profile.models import ServiceProfile
 from ogc_edr_profile.compile import compile_pdf
+from ogc_edr_profile.cite import run_cite
 
 
 def _parse_datetimes(obj, _in_examples: bool = False):
@@ -110,6 +111,11 @@ def main() -> None:
     vs.add_argument("--stateful", action="store_true", default=False,
                     help="Enable stateful testing (POST /execution → GET /jobs/{jobId})")
 
+    # cite-test
+    ct = sub.add_parser("cite-test", help="Run OGC CITE ETS for OGC API - EDR against a live server")
+    ct.add_argument("--url", required=True, help="Base URL of the live server")
+    ct.add_argument("--report", type=Path, default=None, help="Directory to write cite_results.json")
+
     args = parser.parse_args()
 
     if args.command == "schema":
@@ -124,6 +130,10 @@ def main() -> None:
     if args.command == "validate-server":
         _run_validate_server(args)
         return
+
+    if args.command == "cite-test":
+        ok = run_cite(args.url, report_dir=args.report)
+        sys.exit(0 if ok else 1)
 
     if not args.config.exists():
         print(f"Error: config file not found: {args.config}", file=sys.stderr)
