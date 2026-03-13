@@ -148,6 +148,36 @@ collection_examples:
     instanceId: "2025-04-02T00:00:00Z"
 ```
 
+### 5. OGC CITE Conformance Testing
+
+Run the official OGC API - EDR Part 1 conformance test suite (ets-ogcapi-edr10):
+
+```bash
+ogc-edr-profile cite-test \
+  --url https://edr-api-desi-c.mdl.nws.noaa.gov \
+  --report ./cite_results
+```
+
+Results:
+
+```
+OGC API - EDR CITE Results
+  Passed:  76/84
+  Failed:  0
+  Skipped: 8
+
+✓ All CITE tests passed.
+```
+
+The tool automatically:
+- Clones and builds ets-ogcapi-edr10 from GitHub on first run
+- Caches Docker image (`ogccite/ets-ogcapi-edr10:local`) for subsequent runs
+- Runs TestNG tests via `docker exec`
+- Supports localhost testing with `--network host` mode
+- Generates JSON report with detailed test results
+
+The skipped tests are optional features not implemented by the server.
+
 ---
 
 ## Config Reference
@@ -339,6 +369,7 @@ generate(profile, Path("./output"))
 │       ├── models.py            # Authoritative Pydantic schema
 │       ├── generate.py          # Validated model → OpenAPI, AsyncAPI, AsciiDoc
 │       ├── compile.py           # PDF compilation via metanorma/metanorma Docker image
+│       ├── cite.py              # OGC CITE test suite orchestration
 │       └── cli.py               # CLI entry point
 ├── examples/
 │   ├── water_gauge.yaml         # Minimal example profile config

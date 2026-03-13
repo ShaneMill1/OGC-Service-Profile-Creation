@@ -129,14 +129,21 @@ def _build_image() -> None:
     print(f"✓ Image {_IMAGE_NAME} built successfully.\n")
 
 
-def _start_container(container_name: str, port: int) -> subprocess.Popen:
+def _start_container(container_name: str, port: int, iut_url: str) -> subprocess.Popen:
     """Start the TEAM Engine container in detached mode."""
     cmd = [
         "docker", "run", "-d", "--rm",
         "--name", container_name,
-        "-p", f"{port}:8080",
-        _IMAGE_NAME,
     ]
+    
+    # If testing localhost, use host network mode
+    if "localhost" in iut_url or "127.0.0.1" in iut_url:
+        cmd.extend(["--network", "host"])
+    else:
+        cmd.extend(["-p", f"{port}:8080"])
+    
+    cmd.append(_IMAGE_NAME)
+    
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"Failed to start container: {result.stderr}", file=sys.stderr)
@@ -144,9 +151,11 @@ def _start_container(container_name: str, port: int) -> subprocess.Popen:
     return None  # Container is running in background
 
 
-def _wait_ready(container_name: str, port: int) -> bool:
+def _wait_ready(container_name: str, port: int, use_host_network: bool = False) -> bool:
     """Wait for TEAM Engine to be ready."""
-    base = f"http://localhost:{port}"
+    # In host network mode, container uses port 8080 directly
+    check_port = 8080 if use_host_network else port
+    base = f"http://localhost:{check_port}"
     deadline = time.time() + _STARTUP_TIMEOUT
     
     while time.time() < deadline:
@@ -389,10 +398,16 @@ def run_cite(server_url: str, report_dir: Path | None = None) -> bool:
     port = _find_free_port()
     
     print(f"Starting TEAM Engine container on port {port}...")
-    _start_container(container_name, port)
+    _start_container(container_name, port, server_url)
+    
+    # Transform localhost URLs for container access
+    test_url = server_url
+    use_host_network = "localhost" in server_url or "127.0.0.1" in server_url
+    if use_host_network:
+        test_url = server_url.replace("localhost", "localhost").replace("127.0.0.1", "localhost")
     
     try:
-        if not _wait_ready(container_name, port):
+        if not _wait_ready(container_name, port, use_host_network):
             print("Error: TEAM Engine failed to start.", file=sys.stderr)
             # Get container logs
             logs = subprocess.run(
@@ -405,8 +420,8 @@ def run_cite(server_url: str, report_dir: Path | None = None) -> bool:
             print(logs.stderr[-2000:], file=sys.stderr)
             return False
         
-        print(f"Running OGC API - EDR tests against {server_url}...\n")
-        results = _run_tests(container_name, server_url)
+        print(f"Running OGC API - EDR tests against {test_url}...\n")
+        results = _run_tests(container_name, test_url)
         print("Tests complete.\n")
         
         if report_dir:
