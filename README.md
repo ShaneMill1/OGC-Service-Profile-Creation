@@ -52,7 +52,7 @@ See [`examples/nwsviz_profile.yaml`](examples/nwsviz_profile.yaml) for a full wo
 
 ```bash
 ogc-edr-profile generate \
-  --config examples/nwsviz_profile.yaml \
+  --config my_profile.yaml \
   --output ./my_profile
 ```
 
@@ -92,7 +92,7 @@ Requires Docker. Shells out to the official `metanorma/metanorma` image — no R
 
 ```bash
 ogc-edr-profile generate \
-  --config examples/nwsviz_profile.yaml \
+  --config my_profile.yaml \
   --output ./my_profile \
   --pdf
 ```
@@ -123,7 +123,7 @@ Produces `my_profile/document.pdf` — a fully compliant OGC `draft-standard` PD
 
 ```bash
 ogc-edr-profile validate-server \
-  --config examples/nwsviz_profile.yaml \
+  --config my_profile.yaml \
   --url https://edr-api-desi-c.mdl.nws.noaa.gov \
   --max-examples 3
 ```
