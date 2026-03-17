@@ -150,6 +150,33 @@ def _collection_paths(coll: Collection, examples: dict | None = None) -> dict:
         },
     }}
 
+    # Always generate Features paths (items, queryables, schema)
+    paths[f"{base}/items"] = {"get": {
+        "summary": f"Get {coll.title or coll.id} items",
+        "description": desc,
+        "operationId": f"get{coll.id.title().replace('_', '')}Features",
+        "tags": [tag],
+        "parameters": [_F, _LANG],
+        "responses": {
+            "200": _R200_FEATURES,
+            "400": _ERR_400, "404": _ERR_404, "500": _ERR_500,
+        },
+    }}
+    paths[f"{base}/items/{{featureId}}"] = {"get": {
+        "summary": f"Get {coll.title or coll.id} item by id",
+        "description": desc,
+        "operationId": f"get{coll.id.title().replace('_', '')}Feature",
+        "tags": [tag],
+        "parameters": [
+            {"name": "featureId", "in": "path", "required": True, "description": "Feature identifier", "schema": {"type": "string"}},
+            _F, _LANG,
+        ],
+        "responses": {
+            "200": _R200_FEATURES,
+            "400": _ERR_400, "404": _ERR_404, "500": _ERR_500,
+        },
+    }}
+
     if not coll.data_queries:
         return paths
 
@@ -454,16 +481,18 @@ def build_asyncapi(profile: ServiceProfile) -> dict:
     operations: dict = {}
     messages: dict = {}
 
-    # Only generate channels for collections specified in pubsub.collections
-    # If no collections specified, generate for all collections (backward compatibility)
     pubsub_collections = pub.collections if pub.collections else [c.id for c in profile.collections]
 
     for coll in profile.collections:
         if coll.id not in pubsub_collections:
             continue
-            
+
         ch_key = f"{coll.id}_notifications"
         msg_key = f"{coll.id}Observation"
+
+        # Use per-collection filters if available, otherwise fall back to global
+        coll_filters = pub.collection_filters.get(coll.id)
+        filters = coll_filters.filters if coll_filters else pub.filters
 
         channels[ch_key] = {
             "address": f"collections/{coll.id}/items/#",
@@ -472,9 +501,9 @@ def build_asyncapi(profile: ServiceProfile) -> dict:
             **({"x-ogc-subscription": {
                 "filters": [
                     {"name": f.name, "description": f.description, "schema": {"type": f.type.value}}
-                    for f in pub.filters
+                    for f in filters
                 ]
-            }} if pub.filters else {}),
+            }} if filters else {}),
         }
 
         operations[f"receive_{coll.id}_update"] = {
@@ -501,13 +530,30 @@ def build_asyncapi(profile: ServiceProfile) -> dict:
             }
         }
 
+    # Build servers: default production + additional servers
+    servers = {
+        "production": {
+            "host": f"{pub.broker_host}:{pub.broker_port}",
+            "protocol": pub.protocol,
+        }
+    }
+    for srv in pub.servers:
+        server_def = {
+            "description": srv.description,
+            "host": f"{srv.host}:{srv.port}" if srv.port else srv.host,
+            "protocol": srv.protocol,
+            "security": [],
+        }
+        if srv.port:
+            server_def["variables"] = {"port": {"default": str(srv.port), "enum": [str(srv.port)]}}
+        if srv.pathname:
+            server_def["pathname"] = srv.pathname
+        servers[srv.name] = server_def
+
     return {
         "asyncapi": "3.0.0",
         "info": {"title": f"{profile.title} AsyncAPI", "version": profile.version},
-        "servers": {"production": {
-            "host": f"{pub.broker_host}:{pub.broker_port}",
-            "protocol": pub.protocol,
-        }},
+        "servers": servers,
         "channels": channels,
         "operations": operations,
         "components": {"messages": messages},

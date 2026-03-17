@@ -108,6 +108,21 @@ class DocumentMetadata(BaseModel):
     external_id: str | None = None
 
 
+class PubSubServer(BaseModel):
+    """A single pub/sub server endpoint."""
+    name: str
+    description: str = ""
+    host: str
+    port: int | None = None
+    protocol: Literal["amqp", "mqtt", "kafka", "ws", "wss"] = "amqp"
+    pathname: str | None = None
+
+
+class CollectionPubSub(BaseModel):
+    """Per-collection pub/sub filter overrides."""
+    filters: list[SubscriptionFilter] = Field(default_factory=list)
+
+
 class PubSubConfig(BaseModel):
     """Optional OGC API - EDR Part 2 (PubSub) configuration."""
     broker_host: str = "localhost"
@@ -115,6 +130,8 @@ class PubSubConfig(BaseModel):
     protocol: Literal["amqp", "mqtt", "kafka"] = "amqp"
     collections: list[str] = Field(default_factory=list, description="Collection IDs that support PubSub")
     filters: list[SubscriptionFilter] = Field(default_factory=list)
+    servers: list[PubSubServer] = Field(default_factory=list, description="Additional server endpoints (ws, wss)")
+    collection_filters: dict[str, CollectionPubSub] = Field(default_factory=dict, description="Per-collection filter overrides")
 
 
 # ---------------------------------------------------------------------------

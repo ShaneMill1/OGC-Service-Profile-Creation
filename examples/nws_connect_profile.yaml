@@ -186,19 +186,46 @@ pubsub:
   collections:
     - water_gauge
     - wwa
-  filters:
-    - name: flood_stages
-      description: Alert for selected flood stages (below_action, action, minor, moderate, major)
-      type: array
-    - name: stations
-      description: Comma-separated station IDs or 'all' for all stations
-      type: string
-    - name: wfo
-      description: Weather Forecast Office codes (e.g., PHI, AKQ, OKX)
-      type: string
-    - name: email
-      description: Email address for notifications
-      type: string
+  servers:
+    - name: amqp_websocket_local
+      description: AMQP WebSocket endpoint (local development)
+      host: 205.156.8.80
+      port: 15670
+      protocol: ws
+    - name: amqp_websocket_secure
+      description: AMQP WebSocket endpoint (production)
+      host: edr-api-c.mdl.nws.noaa.gov
+      protocol: wss
+      pathname: /wifs_wss/
+  collection_filters:
+    water_gauge:
+      filters:
+        - name: flood_stages
+          description: Alert for selected flood stages (below_action, action, minor, moderate, major)
+          type: array
+        - name: stations
+          description: Comma-separated station IDs or 'all' for all stations
+          type: string
+        - name: wfo
+          description: Weather Forecast Office codes (e.g., PHI, AKQ, OKX)
+          type: string
+        - name: email
+          description: Email address for notifications
+          type: string
+    wwa:
+      filters:
+        - name: event_types
+          description: Weather event types to subscribe to (e.g., Tornado Warning, Flood Watch)
+          type: array
+        - name: state
+          description: Filter by state, or leave blank for all states
+          type: string
+        - name: cwa
+          description: Filter by County Warning Area code
+          type: string
+        - name: email
+          description: Email address for notifications
+          type: string
 
 requirements:
   - id: water-gauge-geojson
