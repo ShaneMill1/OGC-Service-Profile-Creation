@@ -3,13 +3,13 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ogc-edr-profile"
+name = "oapi-profile-builder"
 version = "2.0.0"
-description = "Authoritative tooling for creating OGC API - EDR Part 3 Service Profiles"
+description = "Authoritative tooling for creating OGC API Service Profiles (EDR, Features)"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Shane Mill", email = "shane.mill@noaa.gov" }]
-keywords = ["ogc", "edr", "environmental-data-retrieval", "profile", "openapi"]
+keywords = ["ogc", "edr", "features", "environmental-data-retrieval", "profile", "openapi", "asyncapi"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -32,11 +32,11 @@ dependencies = [
 validate = ["schemathesis>=3.0"]
 
 [project.urls]
-Homepage = "https://github.com/ShaneMill1/OGC-Service-Profile-Creation"
-Issues = "https://github.com/ShaneMill1/OGC-Service-Profile-Creation/issues"
+Homepage = "https://github.com/ShaneMill1/OGC-API-Service-Profile-Builder"
+Issues = "https://github.com/ShaneMill1/OGC-API-Service-Profile-Builder/issues"
 
 [project.scripts]
-ogc-edr-profile = "ogc_edr_profile.cli:main"
+oapi-profile-builder = "oapi_profile_builder.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

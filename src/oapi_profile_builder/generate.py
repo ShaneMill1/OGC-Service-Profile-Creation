@@ -40,7 +40,7 @@ from pathlib import Path
 import yaml
 
 from edr_pydantic.collections import Collection
-from ogc_edr_profile.models import ServiceProfile
+from oapi_profile_builder.models import ServiceProfile
 
 
 # ---------------------------------------------------------------------------

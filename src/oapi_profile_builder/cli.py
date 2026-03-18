@@ -44,11 +44,11 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from ogc_edr_profile.generate import generate, build_openapi
-from ogc_edr_profile.models import ServiceProfile
-from ogc_edr_profile.compile import compile_pdf
-from ogc_edr_profile.cite import run_cite
-from ogc_edr_profile.cite_features import run_cite_features
+from oapi_profile_builder.generate import generate, build_openapi
+from oapi_profile_builder.models import ServiceProfile
+from oapi_profile_builder.compile import compile_pdf
+from oapi_profile_builder.cite import run_cite
+from oapi_profile_builder.cite_features import run_cite_features
 
 
 def _parse_datetimes(obj, _in_examples: bool = False):

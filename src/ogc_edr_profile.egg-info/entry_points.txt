@@ -1,2 +1,0 @@
-[console_scripts]
-ogc-edr-profile = ogc_edr_profile.cli:main

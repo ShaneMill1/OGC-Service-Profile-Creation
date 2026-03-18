@@ -1,17 +1,17 @@
-# OGC API - EDR Part 3 Service Profile Generator
+# OGC API Service Profile Builder
 
-Authoritative tooling for creating OGC API - Environmental Data Retrieval (EDR) Part 3 Service Profiles, built on Pydantic and [edr-pydantic](https://github.com/KNMI/edr-pydantic).
+Authoritative tooling for creating OGC API Service Profiles (EDR, Features), built on Pydantic and [edr-pydantic](https://github.com/KNMI/edr-pydantic).
 
 ## Overview
 
-Profile structure is defined as Pydantic models (`src/ogc_edr_profile/models.py`). Instantiating a `ServiceProfile` validates the entire profile — cross-model validators catch referential errors — before any files are written.
+Profile structure is defined as Pydantic models (`src/oapi_profile_builder/models.py`). Instantiating a `ServiceProfile` validates the entire profile — cross-model validators catch referential errors — before any files are written.
 
 Collections use `edr-pydantic`'s authoritative `Collection` model directly, meaning a profile config is simultaneously a valid EDR collection descriptor and a Part 3 profile definition.
 
 ## Installation
 
 ```bash
-pip install ogc-edr-profile
+pip install oapi-profile-builder
 ```
 
 ---
@@ -72,7 +72,7 @@ See [`examples/minimal_profile.yaml`](examples/minimal_profile.yaml) for a compl
 ### 2. Generate Profile Artifacts
 
 ```bash
-ogc-edr-profile generate \
+oapi-profile-builder generate \
   --config my_profile.yaml \
   --output ./my_profile
 ```
@@ -104,7 +104,7 @@ my_profile/
 Validate a config without generating output:
 
 ```bash
-ogc-edr-profile validate --config my_profile.yaml
+oapi-profile-builder validate --config my_profile.yaml
 ```
 
 ### 3. Compile OGC PDF
@@ -112,7 +112,7 @@ ogc-edr-profile validate --config my_profile.yaml
 Requires Docker. Shells out to the official `metanorma/metanorma` image — no Ruby or LaTeX install needed.
 
 ```bash
-ogc-edr-profile generate \
+oapi-profile-builder generate \
   --config my_profile.yaml \
   --output ./my_profile \
   --pdf
@@ -143,7 +143,7 @@ Produces `my_profile/document.pdf` — a fully compliant OGC `draft-standard` PD
 ### 4. Validate Against a Live Server
 
 ```bash
-ogc-edr-profile validate-server \
+oapi-profile-builder validate-server \
   --config my_profile.yaml \
   --url https://edr-api-desi-c.mdl.nws.noaa.gov \
   --max-examples 3
@@ -176,7 +176,7 @@ collection_examples:
 Run the official OGC API - EDR Part 1 conformance test suite (ets-ogcapi-edr10):
 
 ```bash
-ogc-edr-profile cite-test \
+oapi-profile-builder cite-test \
   --url https://edr-api-desi-c.mdl.nws.noaa.gov \
   --report ./cite_results
 ```
@@ -206,7 +206,7 @@ The skipped tests are optional features not implemented by the server.
 Run the official OGC API - Features Part 1 conformance test suite (ets-ogcapi-features10):
 
 ```bash
-ogc-edr-profile cite-test-features \
+oapi-profile-builder cite-test-features \
   --url https://api.example.com \
   --report ./cite_features_results
 ```
@@ -522,8 +522,8 @@ Both remain compliant with EDR Core - extensions are optional, not mandatory.
 ## Programmatic Use
 
 ```python
-from ogc_edr_profile.models import ServiceProfile
-from ogc_edr_profile.generate import generate
+from oapi_profile_builder.models import ServiceProfile
+from oapi_profile_builder.generate import generate
 from pathlib import Path
 
 profile = ServiceProfile.model_validate(config_dict)
@@ -534,7 +534,7 @@ generate(profile, Path("./output"))
 
 ```
 ├── src/
-│   └── ogc_edr_profile/
+│   └── oapi_profile_builder/
 │       ├── models.py            # Authoritative Pydantic schema
 │       ├── generate.py          # Validated model → OpenAPI, AsyncAPI, AsciiDoc
 │       ├── compile.py           # PDF compilation via metanorma/metanorma Docker image
@@ -564,4 +564,4 @@ MIT — See [LICENSE](LICENSE) for details.
 
 - **Author**: Shane Mill (NOAA/NWS/MDL)
 - **Email**: shane.mill@noaa.gov
-- **Issues**: https://github.com/ShaneMill1/OGC-Service-Profile-Creation/issues
+- **Issues**: https://github.com/ShaneMill1/OGC-API-Service-Profile-Builder/issues
