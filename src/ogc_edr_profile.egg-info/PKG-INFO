@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ogc-edr-profile
-Version: 1.2.0
+Version: 2.0.0
 Summary: Authoritative tooling for creating OGC API - EDR Part 3 Service Profiles
 Author-email: Shane Mill <shane.mill@noaa.gov>
 License: Apache License
@@ -65,10 +65,10 @@ pip install ogc-edr-profile
 
 ### 1. Author a Profile Config
 
-A profile config is a YAML or JSON file. Copy the example and modify it:
+A profile config is a YAML or JSON file. Start with the minimal example:
 
 ```bash
-cp examples/nwsviz_profile.yaml my_profile.yaml
+cp examples/minimal_profile.yaml my_profile.yaml
 ```
 
 The minimal valid config:
@@ -76,6 +76,20 @@ The minimal valid config:
 ```yaml
 name: my_profile
 title: My EDR Profile
+
+# OGC API - EDR Part 3 compliance fields (recommended)
+required_conformance_classes:
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+
+extent_requirements:
+  minimum_bbox: [-180, -90, 180, 90]
+  allowed_crs:
+    - "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+
+output_formats:
+  - name: GeoJSON
+    media_type: application/geo+json
+    schema_ref: https://geojson.org/schema/FeatureCollection.json
 
 collections:
   - id: my_collection
@@ -88,10 +102,17 @@ collections:
         bbox:
           - [-180, -90, 180, 90]
         crs: "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
-    parameter_names: {}
+    parameter_names:
+      temp:
+        type: Parameter
+        observedProperty:
+          label: Temperature
+        unit:              # REQUIRED per OGC API - EDR Part 3
+          label: Celsius
+          symbol: C
 ```
 
-See [`examples/nwsviz_profile.yaml`](examples/nwsviz_profile.yaml) for a full working config with 13 collections, 3 processes, requirements, abstract tests, `collection_examples`, and `document_metadata`.
+See [`examples/minimal_profile.yaml`](examples/minimal_profile.yaml) for a complete working example and [`examples/nwsviz_profile.yaml`](examples/nwsviz_profile.yaml) for a full profile with 13 collections, 3 processes, requirements, abstract tests, and document metadata.
 
 ### 2. Generate Profile Artifacts
 
@@ -265,7 +286,7 @@ The skipped tests are optional features not implemented by the server.
 | `name` | `string` | yes | Lowercase identifier using only `a-z`, `0-9`, `_`. Used in OGC URIs and OpenAPI `operationId`s. e.g. `water_gauge` |
 | `title` | `string` | yes | Human-readable profile title |
 | `version` | `string` | no | Profile version. Defaults to `1.0` |
-| `server_url` | `string` | no | Base URL of the live server. Populates the OpenAPI `servers` block |
+| `server_url` | `string` | no | Base URL of the live server (for documentation only - not used in profile OpenAPI per OGC API - EDR Part 3) |
 | `collections` | `list` | yes | One or more EDR collections (see below) |
 | `processes` | `list` | no | OGC API Processes to include in the OpenAPI (see below) |
 | `requirements` | `list` | no | Normative requirements (see below) |
@@ -273,6 +294,10 @@ The skipped tests are optional features not implemented by the server.
 | `pubsub` | `object` | no | OGC API - EDR Part 2 PubSub configuration (see below) |
 | `collection_examples` | `object` | no | Map of collection id → example parameter values (e.g. `instanceId`) for server validation |
 | `document_metadata` | `object` | no | Metanorma document header fields for PDF compilation (see below) |
+| `required_conformance_classes` | `list[string]` | no | Conformance classes that implementations must declare. Defaults to EDR Core |
+| `extent_requirements` | `object` | no | Profile-level extent restrictions (see below) |
+| `output_formats` | `list` | no | Profile-level output format definitions with schema references (see below) |
+| `collection_id_pattern` | `string` | no | Regex pattern for valid collection IDs |
 
 ---
 
@@ -318,6 +343,8 @@ data_queries:
 
 #### `parameter_names`
 
+**Note:** Per OGC API - EDR Part 3 requirements, all parameters must specify `unit` and `observedProperty`. The tool validates this automatically.
+
 ```yaml
 parameter_names:
   gauge_height:
@@ -327,6 +354,76 @@ parameter_names:
     unit:
       label: feet
       symbol: ft
+```
+
+---
+
+### `extent_requirements`
+
+Profile-level extent restrictions per OGC API - EDR Part 3 REQ_extent.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `minimum_bbox` | `list[float]` | yes | Minimum spatial bounds `[minLon, minLat, maxLon, maxLat]` |
+| `allowed_crs` | `list[string]` | no | Enumerated list of valid CRS values |
+| `crs_pattern` | `string` | no | Regular expression defining valid CRS string patterns |
+| `allowed_trs` | `list[string]` | no | Enumerated list of valid TRS values |
+| `trs_pattern` | `string` | no | Regular expression defining valid TRS string patterns |
+| `allowed_vrs` | `list[string]` | no | Enumerated list of valid VRS values |
+| `vrs_pattern` | `string` | no | Regular expression defining valid VRS string patterns |
+
+**Note:** Either `allowed_crs` or `crs_pattern` must be specified.
+
+```yaml
+extent_requirements:
+  minimum_bbox: [-180, -90, 180, 90]
+  allowed_crs:
+    - "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    - "http://www.opengis.net/def/crs/EPSG/0/4326"
+  allowed_trs:
+    - "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"
+```
+
+---
+
+### `output_formats[]`
+
+Profile-level output format definitions with schema references per OGC API - EDR Part 3 REQ_output-format.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | yes | Format name (e.g., GeoJSON, CoverageJSON) |
+| `media_type` | `string` | yes | MIME type (e.g., application/geo+json) |
+| `schema_ref` | `string` | no | URL to schema definition |
+
+```yaml
+output_formats:
+  - name: GeoJSON
+    media_type: application/geo+json
+    schema_ref: https://geojson.org/schema/FeatureCollection.json
+  - name: CoverageJSON
+    media_type: application/prs.coverage+json
+    schema_ref: https://schemas.opengis.net/ogcapi/edr/1.0/openapi/schemas/coverageJSON.yaml
+```
+
+---
+
+### `required_conformance_classes[]`
+
+Conformance classes that implementations must declare at `/conformance` per OGC API - EDR Part 3 REQ_api.
+
+Defaults to:
+```yaml
+required_conformance_classes:
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+```
+
+Add additional conformance classes as needed:
+```yaml
+required_conformance_classes:
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/oas30"
+  - "http://www.opengis.net/spec/ogcapi-edr-2/1.0/conf/pubsub"
 ```
 
 ---
@@ -423,6 +520,47 @@ Controls the Metanorma document header when compiling a PDF with `--pdf`.
 | `keywords` | `list[string]` | no | Document keywords |
 | `copyright_year` | `integer` | no | Defaults to current year |
 | `external_id` | `string` | no | OGC external document URI |
+
+---
+
+## OGC API - EDR Part 3 Compliance
+
+This tool implements the requirements of OGC API - EDR Part 3: Service Profiles (draft standard):
+
+### Key Compliance Features
+
+1. **Profile OpenAPI Document** (REQ_publishing)
+   - Generated OpenAPI has empty `servers` array (profile is implementation-independent)
+   - Landing page schema requires `profile` link relation
+   - Profile URI advertised in `x-ogc-profile` info field
+
+2. **Conformance Classes** (REQ_api)
+   - `/conformance` endpoint schema specifies required conformance classes
+   - Defaults to EDR Core, customizable via `required_conformance_classes`
+
+3. **Parameter Names** (REQ_parameter-names)
+   - Validates that all parameters specify `unit` and `observedProperty`
+   - Automatically enforced during profile validation
+
+4. **Extent Requirements** (REQ_extent)
+   - Profile-level `extent_requirements` specify minimum bounds
+   - CRS/TRS/VRS restrictions via enumerated lists or regex patterns
+
+5. **Output Formats** (REQ_output-format)
+   - Profile-level `output_formats` with schema references
+   - Links to JSON Schema, XML Schema, or format specifications
+
+6. **Pub/Sub** (REQ_pubsub)
+   - Automatically adds Part 2 conformance requirement when `pubsub` is present
+   - AsyncAPI document specifies channels and payloads
+
+### Profile Types
+
+The tool supports both:
+- **Class 1 Profiles**: Restrictive profiles that constrain EDR Core
+- **Class 2 Profiles**: Extended profiles that add custom requirements (e.g., processes)
+
+Both remain compliant with EDR Core - extensions are optional, not mandatory.
 
 ---
 

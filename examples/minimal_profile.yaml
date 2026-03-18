@@ -1,0 +1,57 @@
+name: minimal_profile
+title: Minimal EDR Profile Example
+version: "1.0"
+
+# OGC API - EDR Part 3 compliance fields (NEW)
+required_conformance_classes:
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+
+extent_requirements:
+  minimum_bbox: [-180, -90, 180, 90]
+  allowed_crs:
+    - "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+
+output_formats:
+  - name: GeoJSON
+    media_type: application/geo+json
+    schema_ref: https://geojson.org/schema/FeatureCollection.json
+
+collections:
+  - id: temperature
+    title: Temperature Observations
+    description: Real-time temperature observations
+    links:
+      - href: https://example.com/collections/temperature
+        rel: self
+        type: application/json
+    extent:
+      spatial:
+        bbox:
+          - [-180, -90, 180, 90]
+        crs: "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    parameter_names:
+      temp:
+        type: Parameter
+        description: Air temperature
+        observedProperty:
+          label: Air Temperature
+        unit:
+          label: Celsius
+          symbol:
+            value: "°C"
+            type: "http://www.opengis.net/def/uom/UCUM/degC"
+
+requirements:
+  - id: temperature-geojson
+    statement: The temperature collection SHALL return GeoJSON features.
+    parts:
+      - The service SHALL provide a /collections/temperature/items endpoint.
+      - The response Content-Type SHALL be application/geo+json.
+
+abstract_tests:
+  - id: temperature-geojson
+    requirement_id: temperature-geojson
+    steps:
+      - Send GET request to /collections/temperature/items.
+      - Verify the response Content-Type is application/geo+json.
+      - Verify each feature contains temp property.

@@ -91,6 +91,30 @@ class SubscriptionFilter(BaseModel):
     type: FilterType = FilterType.string
 
 
+class ExtentRequirements(BaseModel):
+    """Profile-level extent restrictions per OGC API - EDR Part 3."""
+    minimum_bbox: list[float] = Field(min_length=4, max_length=4, description="Minimum spatial bounds [minLon, minLat, maxLon, maxLat]")
+    allowed_crs: list[str] | None = Field(default=None, description="Enumerated list of valid CRS values")
+    crs_pattern: str | None = Field(default=None, description="Regular expression defining valid CRS string patterns")
+    allowed_trs: list[str] | None = Field(default=None, description="Enumerated list of valid TRS values")
+    trs_pattern: str | None = Field(default=None, description="Regular expression defining valid TRS string patterns")
+    allowed_vrs: list[str] | None = Field(default=None, description="Enumerated list of valid VRS values")
+    vrs_pattern: str | None = Field(default=None, description="Regular expression defining valid VRS string patterns")
+
+    @model_validator(mode="after")
+    def validate_crs_specification(self) -> ExtentRequirements:
+        if self.allowed_crs is None and self.crs_pattern is None:
+            raise ValueError("Either allowed_crs or crs_pattern must be specified")
+        return self
+
+
+class OutputFormat(BaseModel):
+    """Output format with schema reference per OGC API - EDR Part 3."""
+    name: str = Field(description="Format name (e.g., GeoJSON, CoverageJSON)")
+    media_type: str = Field(description="MIME type (e.g., application/geo+json)")
+    schema_ref: str | None = Field(default=None, description="URL to schema definition")
+
+
 # Collection IS the edr-pydantic Collection — no wrapper needed.
 # edr_pydantic.collections.Collection models id, extent, data_queries,
 # output_formats, parameter_names, links — all authoritative EDR fields.
@@ -149,7 +173,7 @@ class ServiceProfile(BaseModel):
     name: Annotated[str, Field(pattern=r"^[a-z0-9_]+$")]
     title: str
     version: str = "1.0"
-    server_url: str | None = None
+    server_url: str | None = Field(default=None, description="Base URL for implementation (not used in profile OpenAPI per standard)")
     collections: list[Collection] = Field(min_length=1)
     collection_examples: dict[str, dict] = Field(default_factory=dict)
     requirements: list[Requirement] = Field(default_factory=list)
@@ -157,6 +181,26 @@ class ServiceProfile(BaseModel):
     pubsub: PubSubConfig | None = None
     processes: list[dict] = Field(default_factory=list)
     document_metadata: DocumentMetadata | None = None
+    
+    # OGC API - EDR Part 3 specific fields
+    required_conformance_classes: list[str] = Field(
+        default_factory=lambda: [
+            "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+        ],
+        description="Conformance classes that implementations must declare"
+    )
+    extent_requirements: ExtentRequirements | None = Field(
+        default=None,
+        description="Profile-level extent restrictions"
+    )
+    output_formats: list[OutputFormat] = Field(
+        default_factory=list,
+        description="Profile-level output format definitions with schema references"
+    )
+    collection_id_pattern: str | None = Field(
+        default=None,
+        description="Regex pattern for valid collection IDs"
+    )
 
     # OGC identifiers derived from name — not user-supplied
     @property
@@ -182,4 +226,47 @@ class ServiceProfile(BaseModel):
         ids = [c.id for c in self.collections]
         if len(ids) != len(set(ids)):
             raise ValueError("duplicate collection ids in profile")
+        return self
+
+    @model_validator(mode="after")
+    def validate_parameter_completeness(self) -> ServiceProfile:
+        """Validate parameter_names completeness per OGC API - EDR Part 3 REQ_parameter-names."""
+        for coll in self.collections:
+            if not coll.parameter_names:
+                continue
+            for param_name, param in coll.parameter_names.root.items():
+                # Check if unit is specified
+                if not hasattr(param, 'unit') or param.unit is None:
+                    raise ValueError(
+                        f"Parameter '{param_name}' in collection '{coll.id}' must specify unit "
+                        f"(required by OGC API - EDR Part 3 REQ_parameter-names)"
+                    )
+                # Check if observedProperty is specified (already required by edr-pydantic)
+                if not hasattr(param, 'observedProperty') or param.observedProperty is None:
+                    raise ValueError(
+                        f"Parameter '{param_name}' in collection '{coll.id}' must specify observedProperty"
+                    )
+        return self
+
+    @model_validator(mode="after")
+    def validate_pubsub_conformance(self) -> ServiceProfile:
+        """Ensure pub/sub requirements include Part 2 conformance per REQ_pubsub."""
+        if self.pubsub:
+            # Check if there's a requirement for Part 2 conformance
+            has_part2_req = any(
+                "part 2" in req.statement.lower() or "part-2" in req.statement.lower() or "pubsub" in req.statement.lower()
+                for req in self.requirements
+            )
+            if not has_part2_req:
+                # Auto-add the requirement
+                self.requirements.append(
+                    Requirement(
+                        id="pubsub-part2-conformance",
+                        statement="The service SHALL conform to OGC API - EDR Part 2: Publish-Subscribe",
+                        parts=[
+                            "The service SHALL implement the channels defined in the AsyncAPI document",
+                            "The service SHALL support the message payloads defined for each channel"
+                        ]
+                    )
+                )
         return self

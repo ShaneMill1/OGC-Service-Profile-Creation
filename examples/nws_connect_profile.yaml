@@ -41,6 +41,9 @@ collections:
         observedProperty:
           id: flood_stage
           label: Flood Stage
+        unit:
+          label: category
+          symbol: category
       feet_above_stage:
         type: Parameter
         id: feet_above_stage
@@ -99,6 +102,9 @@ collections:
         observedProperty:
           id: event_type
           label: Event Type
+        unit:
+          label: category
+          symbol: category
       CAP_info_severity:
         type: Parameter
         id: CAP_info_severity
@@ -106,6 +112,9 @@ collections:
         observedProperty:
           id: severity
           label: Severity
+        unit:
+          label: category
+          symbol: category
       CAP_info_urgency:
         type: Parameter
         id: CAP_info_urgency
@@ -113,6 +122,9 @@ collections:
         observedProperty:
           id: urgency
           label: Urgency
+        unit:
+          label: category
+          symbol: category
       CAP_status:
         type: Parameter
         id: CAP_status
@@ -120,6 +132,9 @@ collections:
         observedProperty:
           id: status
           label: Status
+        unit:
+          label: category
+          symbol: category
 
   - id: cwa
     title: NWS County Warning Areas
@@ -226,6 +241,23 @@ pubsub:
         - name: email
           description: Email address for notifications
           type: string
+
+# OGC API - EDR Part 3 compliance fields
+required_conformance_classes:
+  - "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+  - "http://www.opengis.net/spec/ogcapi-edr-2/1.0/conf/pubsub"
+
+extent_requirements:
+  minimum_bbox: [-180, -90, 180, 90]
+  allowed_crs:
+    - "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+  allowed_trs:
+    - "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"
+
+output_formats:
+  - name: GeoJSON
+    media_type: application/geo+json
+    schema_ref: https://geojson.org/schema/FeatureCollection.json
 
 requirements:
   - id: water-gauge-geojson

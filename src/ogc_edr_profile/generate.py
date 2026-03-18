@@ -75,7 +75,51 @@ _LINK_SCHEMA = {
 }
 _LINKS_ARRAY = {"type": "array", "items": _LINK_SCHEMA}
 
-_R200_LANDING = {"description": "Landing page / conformance / collections list", "content": {"application/json": {"schema": {"type": "object", "properties": {"links": _LINKS_ARRAY}}}}}
+# Landing page response with required profile link per REQ_publishing
+def _landing_page_schema(profile_uri: str) -> dict:
+    return {
+        "description": "Landing page",
+        "content": {
+            "application/json": {
+                "schema": {
+                    "type": "object",
+                    "required": ["links"],
+                    "properties": {
+                        "links": {
+                            "type": "array",
+                            "items": _LINK_SCHEMA,
+                            "contains": {
+                                "type": "object",
+                                "required": ["href", "rel"],
+                                "properties": {
+                                    "rel": {"const": "profile"},
+                                    "href": {"const": profile_uri}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+_R200_CONFORMANCE = {
+    "description": "Conformance classes",
+    "content": {
+        "application/json": {
+            "schema": {
+                "type": "object",
+                "required": ["conformsTo"],
+                "properties": {
+                    "conformsTo": {
+                        "type": "array",
+                        "items": {"type": "string"}
+                    }
+                }
+            }
+        }
+    }
+}
 _R200_COLLECTION = {"description": "Collection metadata", "content": {"application/json": {"schema": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "description": {"type": "string"}, "links": _LINKS_ARRAY}}}}}
 _R200_FEATURES = {"description": "Feature collection", "content": {"application/json": {"schema": {"type": "object", "properties": {"instances": {"type": "array", "items": {"type": "object"}}, "features": {"type": "array", "items": {"type": "object"}}}}}}}
 
@@ -272,7 +316,16 @@ def _collection_paths(coll: Collection, examples: dict | None = None) -> dict:
     return paths
 
 
-def _core_paths() -> dict:
+def _core_paths(profile: ServiceProfile) -> dict:
+    landing_response = _landing_page_schema(profile.req_uri)
+    
+    # Conformance response with required conformance classes
+    conformance_response = _R200_CONFORMANCE.copy()
+    if profile.required_conformance_classes:
+        conformance_response["content"]["application/json"]["schema"]["properties"]["conformsTo"]["contains"] = {
+            "enum": profile.required_conformance_classes
+        }
+    
     return {
         "/": {"get": {
             "summary": "Landing page",
@@ -280,7 +333,7 @@ def _core_paths() -> dict:
             "operationId": "getLandingPage",
             "tags": ["server"],
             "parameters": [_F, _LANG],
-            "responses": {"200": _R200_LANDING, "400": _ERR_400, "500": _ERR_500},
+            "responses": {"200": landing_response, "400": _ERR_400, "500": _ERR_500},
         }},
         "/conformance": {"get": {
             "summary": "API conformance definition",
@@ -288,7 +341,7 @@ def _core_paths() -> dict:
             "operationId": "getConformanceDeclaration",
             "tags": ["server"],
             "parameters": [_F, _LANG],
-            "responses": {"200": _R200_LANDING, "400": _ERR_400, "500": _ERR_500},
+            "responses": {"200": conformance_response, "400": _ERR_400, "500": _ERR_500},
         }},
         "/collections": {"get": {
             "summary": "Collections",
@@ -296,7 +349,7 @@ def _core_paths() -> dict:
             "operationId": "getCollections",
             "tags": ["server"],
             "parameters": [_F, _LANG],
-            "responses": {"200": _R200_LANDING, "400": _ERR_400, "500": _ERR_500},
+            "responses": {"200": {"description": "Collections list", "content": {"application/json": {"schema": {"type": "object", "properties": {"links": _LINKS_ARRAY}}}}}, "400": _ERR_400, "500": _ERR_500},
         }},
         "/openapi": {"get": {
             "summary": "OpenAPI definition",
@@ -422,7 +475,7 @@ def _processes_paths(profile: ServiceProfile) -> dict:
 # ---------------------------------------------------------------------------
 
 def build_openapi(profile: ServiceProfile) -> dict:
-    paths: dict = _core_paths()
+    paths: dict = _core_paths(profile)
     for coll in profile.collections:
         paths.update(_collection_paths(coll, profile.collection_examples.get(coll.id)))
     paths.update(_processes_paths(profile))
@@ -442,7 +495,8 @@ def build_openapi(profile: ServiceProfile) -> dict:
             "description": f"OGC API - EDR Part 3 Service Profile: {profile.title}",
             "x-ogc-profile": profile.req_uri,
         },
-        "servers": [{"url": profile.server_url, "description": profile.title}] if getattr(profile, "server_url", None) else [],
+        # Per OGC API - EDR Part 3 REQ_publishing: servers SHALL be blank (profile is not implementation-specific)
+        "servers": [],
         "tags": tags,
         "paths": paths,
         "components": {
