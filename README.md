@@ -18,6 +18,9 @@ pip install oapi-profile-builder
 
 ## Workflow
 
+<img width="1001" height="721" alt="OGC API Service Profile Builder - Pydantic Validation Architecture drawio" src="https://github.com/user-attachments/assets/092c3dfc-549e-41b0-8a92-af0b89689950" />
+
+
 ### 1. Author a Profile Config
 
 A profile config is a YAML or JSON file. Start with the minimal example:
